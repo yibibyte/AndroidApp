@@ -1,17 +1,16 @@
-package dao;
+package data.local;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import model.Product;
+import data.local.dao.ProductDao;
+import data.local.entities.Product;
 
 // AppDatabase.java
 @Database(entities = {Product.class}, version = 1)

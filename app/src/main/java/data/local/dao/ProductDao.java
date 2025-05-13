@@ -1,4 +1,4 @@
-package dao;
+package data.local.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -9,7 +9,7 @@ import androidx.room.Update;
 
 import java.util.List;
 
-import model.Product;
+import data.local.entities.Product;
 
 // ProductDao.java
 @Dao

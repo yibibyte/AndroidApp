@@ -1,11 +1,12 @@
-package dao;
+package presentation.viewmodels;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import java.util.List;
-import model.Product;
+import data.local.entities.Product;
+import data.repositories.ProductRepository;
 
 public class ProductViewModel extends AndroidViewModel {
     private final ProductRepository repository;

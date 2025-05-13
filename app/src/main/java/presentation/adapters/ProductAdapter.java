@@ -1,4 +1,4 @@
-package adapter;
+package presentation.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import model.Product;
+import data.local.entities.Product;
 
 import java.util.ArrayList;
 import java.util.List;

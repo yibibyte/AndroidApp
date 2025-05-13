@@ -1,4 +1,4 @@
-package dao;
+package data.repositories;
 
 import android.app.Application;
 
@@ -6,7 +6,9 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
-import model.Product;
+import data.local.AppDatabase;
+import data.local.dao.ProductDao;
+import data.local.entities.Product;
 
 public class ProductRepository {
     private final ProductDao productDao;
@@ -23,20 +25,14 @@ public class ProductRepository {
     }
 
     public void insert(Product product) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            productDao.insert(product);
-        });
+        AppDatabase.databaseWriteExecutor.execute(() -> productDao.insert(product));
     }
 
     public void update(Product product) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            productDao.update(product);
-        });
+        AppDatabase.databaseWriteExecutor.execute(() -> productDao.update(product));
     }
 
     public void delete(Product product) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            productDao.delete(product);
-        });
+        AppDatabase.databaseWriteExecutor.execute(() -> productDao.delete(product));
     }
 }
