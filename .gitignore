@@ -1,0 +1,40 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+# Файлы конфигурации среды
+.env
+
+# Сборочные артефакты
+/build/
+out/
+dist/
+
+# Временные файлы и кэш
+*.tmp
+*.log
+*.class
+*.o
+
+# Зависимости
+node_modules/
+vendor/
+
+# IDE и редакторы
+.idea/
+.vscode/
+
+# Операционные системы
+Thumbs.db
+/gradle/wrapper/gradle-wrapper.jar
