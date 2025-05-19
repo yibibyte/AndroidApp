@@ -15,22 +15,27 @@ import java.util.List;
 
 import ai.j4app.androidapp.R;
 
-public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
+public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
     private List<Product> products = new ArrayList<>();
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override
-    public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.product_item, parent, false);
-        return new ProductViewHolder(itemView);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_product, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
-        Product current = products.get(position);
-        holder.nameTextView.setText((int) current.getPrice());
-        holder.priceTextView.setText(String.format("%.2f руб.", current.getPrice()));
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Product product = products.get(position);
+        holder.nameTextView.setText(product.name);
+        holder.priceTextView.setText(String.format("%.2f руб.", product.price));
     }
 
     @Override
@@ -38,19 +43,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         return products.size();
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
-        notifyDataSetChanged();
-    }
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView nameTextView, priceTextView;
 
-    static class ProductViewHolder extends RecyclerView.ViewHolder {
-        private final TextView nameTextView;
-        private final TextView priceTextView;
-
-        public ProductViewHolder(@NonNull View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
-            nameTextView = itemView.findViewById(R.id.textViewName);
-            priceTextView = itemView.findViewById(R.id.textViewPrice);
+            nameTextView = itemView.findViewById(R.id.text_name);
+            priceTextView = itemView.findViewById(R.id.text_price);
         }
     }
 }

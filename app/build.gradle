@@ -1,6 +1,27 @@
 plugins {
     alias(libs.plugins.android.application)
 }
+// Задача для очистки проекта
+task customClean(type: Delete) {
+    delete rootProject.buildDir
+    println "Проект очищен!"
+}
+
+// Задача для сборки проекта
+task customBuild {
+    dependsOn 'build'
+    doLast {
+        println "Сборка завершена!"
+    }
+}
+
+// Комбинированная задача: очистка + сборка
+task fullBuild {
+    dependsOn 'customClean', 'customBuild'
+    doLast {
+        println "Очистка и сборка завершены!"
+    }
+}
 
 android {
     namespace 'ai.j4app.androidapp'
@@ -29,6 +50,13 @@ android {
     buildFeatures {
         viewBinding true
     }
+    defaultConfig {
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
+    }
 }
 
 dependencies {
@@ -42,6 +70,7 @@ dependencies {
     implementation libs.navigation.ui
     implementation libs.room.common.jvm
     implementation libs.play.services.analytics.impl
+    implementation libs.annotation
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core

@@ -1,6 +1,7 @@
 package data.local.entities;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "products")
@@ -13,6 +14,7 @@ public class Product {
 
     public Product() {}
 
+    @Ignore
     public Product(String name, double price) {
         this.name = name;
         this.price = price;
