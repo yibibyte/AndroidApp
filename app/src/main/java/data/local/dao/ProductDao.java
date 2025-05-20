@@ -23,9 +23,9 @@ public interface ProductDao {
     @Delete
     void delete(Product product);
 
-    @Query("SELECT * FROM products ORDER BY name ASC")
-    LiveData<List<Product>> getAllProducts();
+    @Query("SELECT * FROM products")
+    List<Product> getAllProductsSync(); // Синхронная версия для RoomDataManager
 
-    @Query("SELECT * FROM products WHERE id = :id")
-    Product getProductById(int id);
+    @Query("SELECT * FROM products")
+    LiveData<List<Product>> getAllProducts(); // Асинхронная версия для LiveData
 }

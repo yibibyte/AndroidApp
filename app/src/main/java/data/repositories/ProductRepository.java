@@ -3,6 +3,7 @@ package data.repositories;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
+import androidx.room.Room;
 
 import java.util.List;
 
@@ -14,18 +15,19 @@ public class ProductRepository {
     private final ProductDao productDao;
     private final LiveData<List<Product>> allProducts;
 
-    public ProductRepository(Application application) {
-        AppDatabase db = AppDatabase.getInstance(application);
+    public ProductRepository(Application app, LiveData<List<Product>> allProducts) {
+        this.allProducts = allProducts;
+        AppDatabase db = Room.databaseBuilder(app,
+                AppDatabase.class, "products-db").build();
         productDao = db.productDao();
-        allProducts = productDao.getAllProducts();
     }
 
     public LiveData<List<Product>> getAllProducts() {
-        return allProducts;
+        return productDao.getAllProducts();
     }
 
     public void insert(Product product) {
-        AppDatabase.databaseWriteExecutor.execute(() -> productDao.insert(product));
+        new Thread(() -> productDao.insert(product)).start();
     }
 
     public void update(Product product) {
