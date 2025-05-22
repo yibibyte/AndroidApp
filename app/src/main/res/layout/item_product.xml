@@ -15,13 +15,13 @@
             android:id="@+id/text_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/text_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#666"/>
+            android:textColor="#666" />
     </LinearLayout>
 
     <!-- Используем Button или ImageButton -->
@@ -29,6 +29,6 @@
         android:id="@+id/button_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:shadowColor=""
-        android:text="Удалить"/>
+        android:shadowColor="#2d6600"
+        android:text="Удалить" />
 </LinearLayout>
