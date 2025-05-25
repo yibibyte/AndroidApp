@@ -1,6 +1,6 @@
 package ai.j4app.androidapp.ui.home.data;
 
-import ai.j4app.androidapp.ui.home.data.model.LoggedInUser;
+import data.local.entities.LoggedInUser;
 
 /**
  * Class that requests authentication and user information from the remote data source and

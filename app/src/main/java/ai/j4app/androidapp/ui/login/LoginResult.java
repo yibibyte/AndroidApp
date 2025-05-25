@@ -1,5 +1,7 @@
 package ai.j4app.androidapp.ui.login;
 
+import data.local.entities.UserRole;
+
 import androidx.annotation.Nullable;
 
 /**
@@ -9,14 +11,20 @@ class LoginResult {
     @Nullable
     private LoggedInUserView success;
     @Nullable
-    private Integer error;
+    private String error;
 
-    LoginResult(@Nullable Integer error) {
+    private UserRole role;
+    LoginResult(@Nullable String error) {
         this.error = error;
     }
-
-    LoginResult(@Nullable LoggedInUserView success) {
+    public LoginResult(LoggedInUserView success) {
         this.success = success;
+    }
+
+    public LoginResult(LoggedInUserView success, String error, UserRole role) {
+        this.success = success;
+        this.error = error;
+        this.role = role;
     }
 
     @Nullable
@@ -25,7 +33,11 @@ class LoginResult {
     }
 
     @Nullable
-    Integer getError() {
+    String getError() {
         return error;
+    }
+
+    public UserRole getRole() {
+        return role;
     }
 }

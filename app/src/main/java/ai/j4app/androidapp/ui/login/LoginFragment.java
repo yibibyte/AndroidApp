@@ -1,5 +1,10 @@
 package ai.j4app.androidapp.ui.login;
 
+import static ai.j4app.androidapp.ui.login.SessionManager.KEY_EXPIRY;
+import static ai.j4app.androidapp.ui.login.SessionManager.KEY_ROLE;
+import static ai.j4app.androidapp.ui.login.SessionManager.KEY_USERNAME;
+import static ai.j4app.androidapp.ui.login.SessionManager.pref;
+
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.annotation.NonNull;
@@ -7,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,11 +29,12 @@ import android.widget.Toast;
 
 import ai.j4app.androidapp.R;
 import ai.j4app.androidapp.databinding.FragmentLoginBinding;
+import presentation.activities.MainActivity;
 
 
 public class LoginFragment extends Fragment {
 
-    private LoginViewModel loginViewModel;
+    private LoginViewModelImpl loginViewModelImpl;
     private FragmentLoginBinding binding;
 
     @Nullable
@@ -41,18 +48,19 @@ public class LoginFragment extends Fragment {
 
     }
 
+    @SuppressLint("SupportAnnotationUsage")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
+        loginViewModelImpl = new ViewModelProvider(this, new LoginViewModelFactory())
+                .get(LoginViewModelImpl.class);
 
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
         final Button loginButton = binding.login;
         final ProgressBar loadingProgressBar = binding.loading;
 
-        loginViewModel.getLoginFormState().observe(getViewLifecycleOwner(), new Observer<LoginFormState>() {
+        loginViewModelImpl.getLoginFormState().observe(getViewLifecycleOwner(), new Observer<LoginFormState>() {
             @Override
             public void onChanged(@Nullable LoginFormState loginFormState) {
                 if (loginFormState == null) {
@@ -68,7 +76,7 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        loginViewModel.getLoginResult().observe(getViewLifecycleOwner(), new Observer<LoginResult>() {
+        loginViewModelImpl.getLoginResult().observe(getViewLifecycleOwner(), new Observer<LoginResult>() {
             @Override
             public void onChanged(@Nullable LoginResult loginResult) {
                 if (loginResult == null) {
@@ -97,7 +105,7 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
+                loginViewModelImpl.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
             }
         };
@@ -108,7 +116,7 @@ public class LoginFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.login(usernameEditText.getText().toString(),
+                    loginViewModelImpl.login(usernameEditText.getText().toString(),
                             passwordEditText.getText().toString());
                 }
                 return false;
@@ -119,21 +127,13 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(),
+                loginViewModelImpl.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
             }
         });
     }
 
-    private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
-        if (getContext() != null && getContext().getApplicationContext() != null) {
-            Toast.makeText(getContext().getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void showLoginFailed(@StringRes Integer errorString) {
+    private void showLoginFailed(@SuppressLint("SupportAnnotationUsage") @StringRes String errorString) {
         if (getContext() != null && getContext().getApplicationContext() != null) {
             Toast.makeText(
                     getContext().getApplicationContext(),
@@ -141,10 +141,41 @@ public class LoginFragment extends Fragment {
                     Toast.LENGTH_LONG).show();
         }
     }
+    private void updateUiWithUser(LoggedInUserView model) {
+        // Создаем приветственное сообщение
+        String welcome = getString(R.string.welcome) + model.getDisplayName();
+
+        // Показ сообщения
+        if (getContext() != null && getContext().getApplicationContext() != null) {
+            Toast.makeText(getContext().getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+        }
+
+        // Создаем сессию
+        SessionManager session = new SessionManager(requireContext());
+        session.createSession(model.getRole(), model.getDisplayName());
+
+        // Перенаправляем пользователя
+        ((MainActivity) requireActivity()).redirectBasedOnRole();
+    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+    public boolean isLoggedIn() {
+        return pref.getLong(KEY_EXPIRY, 0) > System.currentTimeMillis();
+    }
+
+    public String getUserRole() {
+        return pref.getString(KEY_ROLE, null);
+    }
+
+    public String getUsername() {
+        return pref.getString(KEY_USERNAME, null);
+    }
+
+    public void logout() {
+        pref.edit().clear().apply();
     }
 }
